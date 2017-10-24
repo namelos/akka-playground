@@ -14,5 +14,14 @@ class SilentActor01Test extends TestKit(ActorSystem("testsystem"))
       silentActor ! SilentMessage("whisper")
       silentActor.underlyingActor.state must contain("whisper")
     }
+    "change state when it receives a message, multi threaded" in {
+      import SilentActor._
+
+      val silentActor = system.actorOf(Props[SilentActor], "s3")
+      silentActor ! SilentMessage("whisper1")
+      silentActor ! SilentMessage("whisper2")
+      silentActor ! GetState(testActor)
+      expectMsg(Vector("whisper1", "whisper2"))
+    }
   }
 }

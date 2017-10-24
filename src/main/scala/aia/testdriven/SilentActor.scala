@@ -14,6 +14,7 @@ class SilentActor extends Actor {
   override def receive: Receive = {
     case SilentMessage(data) =>
       internalState = internalState :+ data
+    case GetState(receiver) => receiver ! internalState
   }
 
   def state: Vector[String] = internalState
